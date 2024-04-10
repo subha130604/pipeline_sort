@@ -1,39 +1,32 @@
 pipeline {
     agent any
 	
-	
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/subha130604/pipeline_sort.git'
+                git branch: 'main', url: 'https://github.com/subha130604/pipeline_sort.git'
             }
         }
-         stage('Build') {
+        stage('Build') {
             steps {
-                
-
                 dir('D:/maven_Pipe/pipeline') {
-			bat 'mvn compile'
-                    bat 'mvn package'
-			
+                    bat 'mvn clean compile package'
                 }
             }
         }
-	    stage('Test'){
-		    steps{
-			    dir('D:/maven_Pipe/pipeline') {
-			    bat 'mvn test'
-		    }
-		    }
-	    }
-       
-        
-        stage('Run') { 
+        stage('Test') {
             steps {
-	    dir('D:/maven_Pipe/pipeline'){
-                bat "java -cp target/classes com.devops.pipeline.App"
+                dir('D:/maven_Pipe/pipeline') {
+                    bat 'mvn test'
+                }
             }
-	    }
+        }
+        stage('Run') {
+            steps {
+                dir('D:/maven_Pipe/pipeline') {
+                    bat 'java -cp target/classes com.devops.pipeline.App'
+                }
+            }
         }
         // Add more stages as needed
     }
